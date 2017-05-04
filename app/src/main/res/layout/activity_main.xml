@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#C2C2C2"
+    tools:context="com.daniel_catlett.minesweeperandroid.MainActivity">
+
+    <GridLayout
+        android:id="@+id/gridForBoard"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:columnCount="8"
+        android:rowCount="8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+
+    </GridLayout>
+
+    <ImageButton
+        android:id="@+id/questionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/questionDescription"
+        android:cropToPadding="false"
+        android:padding="1px"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/questionbutton"
+        app:layout_constraintHorizontal_bias="0.501"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        android:layout_marginBottom="16dp" />
+
+    <ImageButton
+        android:id="@+id/mineButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/mineDescription"
+        android:padding="1px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridForBoard"
+        app:layout_constraintVertical_bias="0.448"
+        app:srcCompat="@drawable/minebutton"
+        app:layout_constraintRight_toLeftOf="@+id/flagButton"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageButton
+        android:id="@+id/flagButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/flagDescription"
+        android:padding="1px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridForBoard"
+        app:layout_constraintVertical_bias="0.448"
+        app:srcCompat="@drawable/flagbutton"
+        app:layout_constraintRight_toLeftOf="@+id/questionButton"
+        app:layout_constraintLeft_toRightOf="@+id/mineButton" />
+
+    <ImageButton
+        android:id="@+id/zoomInButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/zoomInDescription"
+        android:padding="1px"
+        app:srcCompat="@drawable/zoominbutton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridForBoard"
+        app:layout_constraintRight_toLeftOf="@+id/zoomOutButton"
+        app:layout_constraintLeft_toRightOf="@+id/questionButton" />
+
+    <ImageButton
+        android:id="@+id/zoomOutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/zoomOutDescription"
+        android:padding="1px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridForBoard"
+        app:srcCompat="@drawable/zoomoutbutton"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/zoomInButton" />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Minesweeper Android</string>
+    <string name="questionDescription">Question Mark Button</string>
+    <string name="mineDescription">Mine Button</string>
+    <string name="flagDescription">Flag Button</string>
+    <string name="zoomInDescription">Zoom In Button</string>
+    <string name="zoomOutDescription">Zoom Out Button</string>
+</resources>
