@@ -5,4 +5,8 @@
     <string name="flagDescription">Flag Button</string>
     <string name="zoomInDescription">Zoom In Button</string>
     <string name="zoomOutDescription">Zoom Out Button</string>
+    <string name="minesLeft">Mines Left:</string>
+    <string name="gameOver">Game Over</string>
+    <string name="youWin">You Win!</string>
+    <string name="newGame">New Game</string>
 </resources>

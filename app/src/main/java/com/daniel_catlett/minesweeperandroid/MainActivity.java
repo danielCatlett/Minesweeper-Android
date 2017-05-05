@@ -3,20 +3,21 @@ package com.daniel_catlett.minesweeperandroid;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
-//// TODO: 5/4/2017 game starts no matter what activeSelectionType equals 
 public class MainActivity extends AppCompatActivity
 {
     //visual container for the image buttons
     GridLayout boardContainer;
     //programming container for the image buttons
-    ArrayList<ArrayList<ImageButton>> buttonBoard = new ArrayList<ArrayList<ImageButton>>();
+    ArrayList<ArrayList<ImageButton>> buttonBoard;
     //container for handling game data
-    Board theBoard = new Board(8, 8, 10);
+    Board theBoard;
     boolean boardSetUp;
 
     //buttons for selecting selection type
@@ -27,13 +28,29 @@ public class MainActivity extends AppCompatActivity
     //clearing is 0, placing flags is 1, placing question marks is 2
     int activeSelectionType;
 
+    TextView mineCounter;
+    int minesLeft;
+
+    boolean gameIsOver;
+
+    Button newGameButton;
+
     HeyListen listener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        loadActivity();
+    }
+
+    private void loadActivity()
+    {
         setContentView(R.layout.activity_main);
+
+        theBoard = new Board(8, 8, 10);
+        buttonBoard = new ArrayList<ArrayList<ImageButton>>();
 
         boardSetUp = false;
         boardContainer = (GridLayout)findViewById(R.id.gridForBoard);
@@ -45,6 +62,17 @@ public class MainActivity extends AppCompatActivity
         flagButton.setOnClickListener(bFlag);
         questionButton = (ImageButton)findViewById(R.id.questionButton);
         questionButton.setOnClickListener(bQuestion);
+
+        //set up mineCounter
+        mineCounter = (TextView)findViewById(R.id.mineCounter);
+        minesLeft = 10;
+        String displayThis = getString(R.string.minesLeft) + " " + Integer.toString(minesLeft);
+        mineCounter.setText(displayThis);
+
+        gameIsOver = false;
+
+        newGameButton = (Button)findViewById(R.id.newGameButton);
+        newGameButton.setOnClickListener(bNewGame);
 
         //Create buttons, and add to the GridLayout and the Arraylist
         for(int y = 0; y < 8; y++)
@@ -72,10 +100,10 @@ public class MainActivity extends AppCompatActivity
             if(activeSelectionType != 0)
             {
                 activeSelectionType = 0;
+                mineButton.setImageResource(R.drawable.minebuttonselected);
+                flagButton.setImageResource(R.drawable.flagbutton);
+                questionButton.setImageResource(R.drawable.questionbutton);
             }
-            mineButton.setImageResource(R.drawable.minebuttonselected);
-            flagButton.setImageResource(R.drawable.flagbutton);
-            questionButton.setImageResource(R.drawable.questionbutton);
         }
     };
 
@@ -84,13 +112,13 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onClick(View view)
         {
-            if(activeSelectionType != 1)
+            if(activeSelectionType != 1 && boardSetUp)
             {
                 activeSelectionType = 1;
+                mineButton.setImageResource(R.drawable.minebutton);
+                flagButton.setImageResource(R.drawable.flagbuttonselected);
+                questionButton.setImageResource(R.drawable.questionbutton);
             }
-            mineButton.setImageResource(R.drawable.minebutton);
-            flagButton.setImageResource(R.drawable.flagbuttonselected);
-            questionButton.setImageResource(R.drawable.questionbutton);
         }
     };
 
@@ -99,13 +127,22 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onClick(View view)
         {
-            if(activeSelectionType != 2)
+            if(activeSelectionType != 2 && boardSetUp)
             {
                 activeSelectionType = 2;
+                mineButton.setImageResource(R.drawable.minebutton);
+                flagButton.setImageResource(R.drawable.flagbutton);
+                questionButton.setImageResource(R.drawable.questionbuttonselected);
             }
-            mineButton.setImageResource(R.drawable.minebutton);
-            flagButton.setImageResource(R.drawable.flagbutton);
-            questionButton.setImageResource(R.drawable.questionbuttonselected);
+        }
+    };
+
+    Button.OnClickListener bNewGame = new Button.OnClickListener()
+    {
+        @Override
+        public void onClick(View view)
+        {
+            loadActivity();
         }
     };
 
@@ -133,13 +170,12 @@ public class MainActivity extends AppCompatActivity
                 clearSurroundingTiles(x, y);
                 boardSetUp = true;
             }
-            else
+            else if(!gameIsOver)
             {
                 //respond to player interaction
                 updateGameState(x, y, theBoard.getState(x, y));
             }
         }
-
     };
 
     public void updateGameState(int x, int y, int currentState)
@@ -147,35 +183,17 @@ public class MainActivity extends AppCompatActivity
         switch(currentState)
         {
             case 0: //if tile is untouched
-                switch(activeSelectionType)
-                {
-                    case 0: //if player is clearing tiles
-                        if(!theBoard.checkIfMine(x, y)) //if tile is not a mine
-                        {
-                            theBoard.setState(x, y, 3);
-                            if(!theBoard.playerWon()) //if the player didn't win
-                            {
-                                updateButton(x, y);
-                                clearSurroundingTiles(x, y);
-                            }
-                            //// TODO: 5/4/2017 do something if the player wins
-                        }
-                        //// TODO: 5/4/2017 do something if player loses
-                        break;
-                    case 1: //if the player is flagging tiles
-                        theBoard.setState(x, y, 1); //flag tile
-                        updateButton(x, y);
-                        break;
-                    default: //if the player is question marking tiles
-                        theBoard.setState(x, y, 2); //question mark the tile
-                        updateButton(x, y);
-                }
+                tileIsUntouched(x, y);
                 break;
             case 1: //if tile is flagged
                 if(activeSelectionType == 1) //if player is flagging tiles
                 {
                     theBoard.setState(x, y, 0); //restore tile to untouched
                     updateButton(x, y);
+                    //add to minesLeft
+                    minesLeft++;
+                    String displayThis = getString(R.string.minesLeft) + " " + Integer.toString(minesLeft);
+                    mineCounter.setText(displayThis);
                 }
                 break;
             case 2: //if tile is question marked
@@ -187,6 +205,65 @@ public class MainActivity extends AppCompatActivity
                 break;
             default:
         }
+    }
+
+    private void tileIsUntouched(int x, int y)
+    {
+        switch(activeSelectionType)
+        {
+            case 0: //if player is clearing tiles
+                clearingUntouchedTile(x, y);
+                break;
+            case 1: //if the player is flagging tiles
+                theBoard.setState(x, y, 1); //flag tile
+                updateButton(x, y);
+                //decrease minesLeft
+                minesLeft--;
+                String displayThis = getString(R.string.minesLeft) + " " + Integer.toString(minesLeft);
+                mineCounter.setText(displayThis);
+                break;
+            default: //if the player is question marking tiles
+                theBoard.setState(x, y, 2); //question mark the tile
+                updateButton(x, y);
+        }
+    }
+
+    private void clearingUntouchedTile(int x, int y)
+    {
+        if(!theBoard.checkIfMine(x, y)) //if tile is not a mine
+        {
+            theBoard.setState(x, y, 3);
+            if(!theBoard.playerWon()) //if the player didn't win
+            {
+                updateButton(x, y);
+                if(theBoard.getNum(x, y) == 0)
+                    clearSurroundingTiles(x, y);
+            }
+            else
+            {
+                updateButton(x, y);
+                mineCounter.setText(getString(R.string.youWin));
+                gameIsOver = true;
+            }
+        }
+        else
+            gameOver();
+    }
+
+    private void gameOver()
+    {
+        for(int y = 0; y < 8; y++)
+        {
+            for(int x = 0; x < 8; x++)
+            {
+                if(theBoard.checkIfMine(x, y))
+                    buttonBoard.get(y).get(x).setImageResource(R.drawable.mine43);
+                else
+                    setCorrectNumForButton(x, y, theBoard.getNum(x, y));
+            }
+        }
+        mineCounter.setText(getString(R.string.gameOver));
+        gameIsOver = true;
     }
 
     /*
@@ -203,7 +280,7 @@ public class MainActivity extends AppCompatActivity
                 buttonBoard.get(y).get(x).setImageResource(R.drawable.untouched43);
                 break;
             case 1:
-                buttonBoard.get(y).get(x).setImageResource(R.drawable.mine43);
+                buttonBoard.get(y).get(x).setImageResource(R.drawable.flagged43);
                 break;
             case 2:
                 buttonBoard.get(y).get(x).setImageResource(R.drawable.question43);
@@ -282,10 +359,12 @@ public class MainActivity extends AppCompatActivity
 
     private void handleTileClearing(int x, int y)
     {
-        if(theBoard.getState(x, y) == 0)
+        //if not a mine, and tile is untouched
+        if(theBoard.getState(x, y) == 0 && !theBoard.checkIfMine(x, y))
         {
             theBoard.setState(x, y, 3);
             updateButton(x, y);
+            //if the cleared tile is a zero, recursively call
             if(theBoard.getNum(x, y) == 0)
                 clearSurroundingTiles(x, y);
         }
