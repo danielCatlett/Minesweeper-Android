@@ -77,11 +77,12 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/zoomInDescription"
         android:padding="1px"
-        app:srcCompat="@drawable/zoominbutton"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gridForBoard"
+        app:layout_constraintLeft_toRightOf="@+id/questionButton"
         app:layout_constraintRight_toLeftOf="@+id/zoomOutButton"
-        app:layout_constraintLeft_toRightOf="@+id/questionButton" />
+        app:layout_constraintTop_toBottomOf="@+id/gridForBoard"
+        app:srcCompat="@drawable/zoominbutton" />
 
     <ImageButton
         android:id="@+id/zoomOutButton"
@@ -89,11 +90,12 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/zoomOutDescription"
         android:padding="1px"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gridForBoard"
-        app:srcCompat="@drawable/zoomoutbutton"
+        app:layout_constraintLeft_toRightOf="@+id/zoomInButton"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toRightOf="@+id/zoomInButton" />
+        app:layout_constraintTop_toBottomOf="@+id/gridForBoard"
+        app:srcCompat="@drawable/zoomoutbutton" />
 
     <TextView
         android:id="@+id/mineCounter"

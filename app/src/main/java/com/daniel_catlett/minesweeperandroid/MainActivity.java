@@ -188,8 +188,10 @@ public class MainActivity extends AppCompatActivity
             case 1: //if tile is flagged
                 if(activeSelectionType == 1) //if player is flagging tiles
                 {
-                    theBoard.setState(x, y, 0); //restore tile to untouched
+                    //restore tile to untouched
+                    theBoard.setState(x, y, 0);
                     updateButton(x, y);
+
                     //add to minesLeft
                     minesLeft++;
                     String displayThis = getString(R.string.minesLeft) + " " + Integer.toString(minesLeft);
@@ -232,10 +234,13 @@ public class MainActivity extends AppCompatActivity
     {
         if(!theBoard.checkIfMine(x, y)) //if tile is not a mine
         {
-            theBoard.setState(x, y, 3);
+            theBoard.setState(x, y, 3); //clear it
+
             if(!theBoard.playerWon()) //if the player didn't win
             {
                 updateButton(x, y);
+
+                //if the tile is a 0, clear all tiles around it
                 if(theBoard.getNum(x, y) == 0)
                     clearSurroundingTiles(x, y);
             }
@@ -364,7 +369,7 @@ public class MainActivity extends AppCompatActivity
         {
             theBoard.setState(x, y, 3);
             updateButton(x, y);
-            //if the cleared tile is a zero, recursively call
+            //if the newly cleared tile is a zero, recursively call
             if(theBoard.getNum(x, y) == 0)
                 clearSurroundingTiles(x, y);
         }
